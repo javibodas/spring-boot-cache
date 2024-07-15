@@ -1,7 +1,7 @@
 com:
   jgb:
     books:
-      apiUrl:
+      baseUrl:
         stephenKing: https://stephen-king-api.onrender.com/api
 spring:
   cache:

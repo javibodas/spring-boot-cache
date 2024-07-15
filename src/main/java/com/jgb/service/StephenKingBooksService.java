@@ -5,6 +5,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
@@ -13,11 +14,12 @@ import org.springframework.web.client.RestClient;
 public class StephenKingBooksService {
 
     private final RestClient client;
-    @Value("${com.jgb.books.apiUrl.stephenKing}")
-    private String apiUrl;
 
-    public StephenKingBooksService() {
-        this.client = RestClient.create();
+    public StephenKingBooksService(@Value("${com.jgb.books.baseUrl.stephenKing}") String baseUrl) {
+
+        this.client = RestClient.builder()
+                .baseUrl(baseUrl)
+                .build();
     }
 
     @Cacheable("stephenKingBooks")
@@ -35,8 +37,9 @@ public class StephenKingBooksService {
     private StephenKingBooksResponse getAllBooks() {
         return client
                 .get()
-                .uri(this.apiUrl + "/books")
+                .uri("/books")
                 .retrieve()
+                .onStatus(HttpStatusCode::is2xxSuccessful, ((request, response) -> log.info("Books obtained successfully")))
                 .body(StephenKingBooksResponse.class);
     }
 }
