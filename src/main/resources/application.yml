@@ -1,0 +1,9 @@
+com:
+  jgb:
+    books:
+      apiUrl:
+        stephenKing: https://stephen-king-api.onrender.com/api
+spring:
+  cache:
+    caffeine:
+      spec: expireAfterAccess=60s
