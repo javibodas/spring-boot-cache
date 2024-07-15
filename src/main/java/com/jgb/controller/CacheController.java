@@ -5,6 +5,7 @@ import com.jgb.service.StephenKingBooksService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -22,7 +23,7 @@ public class CacheController {
         return ResponseEntity.ok(booksResponse.getData());
     }
 
-    @GetMapping("/books/refresh")
+    @PostMapping("/books/refresh")
     public ResponseEntity<Void> refreshBooks() {
         stephenKingBooksService.refreshBooks();
 

@@ -6,19 +6,18 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.client.RestClient;
 
 @Service
 @Log4j2
 public class StephenKingBooksService {
 
-    private final WebClient client;
+    private final RestClient client;
+    @Value("${com.jgb.books.apiUrl.stephenKing}")
+    private String apiUrl;
 
-    public StephenKingBooksService(WebClient.Builder webClientBuilder,
-                                   @Value("${com.jgb.books.apiUrl.stephenKing}") String apiUrl) {
-        this.client = webClientBuilder
-                .baseUrl(apiUrl)
-                .build();
+    public StephenKingBooksService() {
+        this.client = RestClient.create();
     }
 
     @Cacheable("stephenKingBooks")
@@ -36,10 +35,8 @@ public class StephenKingBooksService {
     private StephenKingBooksResponse getAllBooks() {
         return client
                 .get()
-                .uri("/books")
+                .uri(this.apiUrl + "/books")
                 .retrieve()
-                .bodyToMono(StephenKingBooksResponse.class)
-                .doOnSuccess(response -> log.info("Stephen King Books obtained."))
-                .block();
+                .body(StephenKingBooksResponse.class);
     }
 }
