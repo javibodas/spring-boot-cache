@@ -1,7 +1,8 @@
 package com.jgb.controller;
 
 import com.jgb.domain.books.stephenKing.StephenKingBook;
-import com.jgb.service.StephenKingBooksService;
+import com.jgb.usecase.GetStephenKingBooksUsecase;
+import com.jgb.usecase.RefreshStephenKingBooksUsecase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,18 +15,19 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CacheController {
 
-    private final StephenKingBooksService stephenKingBooksService;
+    private final GetStephenKingBooksUsecase getStephenKingBooksUsecase;
+    private final RefreshStephenKingBooksUsecase refreshStephenKingBooksUsecase;
 
     @GetMapping("/books")
     public ResponseEntity<List<StephenKingBook>> getBooks() {
-        final var booksResponse = stephenKingBooksService.getBooks();
+        final var booksResponse = getStephenKingBooksUsecase.execute();
 
-        return ResponseEntity.ok(booksResponse.getData());
+        return ResponseEntity.ok(booksResponse);
     }
 
     @PostMapping("/books/refresh")
     public ResponseEntity<Void> refreshBooks() {
-        stephenKingBooksService.refreshBooks();
+        refreshStephenKingBooksUsecase.execute();
 
         return ResponseEntity.ok().build();
     }
